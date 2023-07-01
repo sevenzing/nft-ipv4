@@ -9,12 +9,7 @@ import "./IPDrawer.sol";
 
 contract InternetProtocol is ERC721, ERC721Enumerable, Ownable {
     using Strings for uint8;
-    enum Rarity {
-        Common,
-        Rare,
-        Epic,
-        Legendary
-    }
+
     uint32[] legendaryIds = [
         3324575748, // a.root-servers.net	198.41.0.4
         3339259593, // b.root-servers.net	199.9.14.201
@@ -51,14 +46,16 @@ contract InternetProtocol is ERC721, ERC721Enumerable, Ownable {
         return (octet1, octet2, octet3, octet4);
     }
 
-    function determineRarity(uint32 id) internal view returns (Rarity) {
+    function determineRarity(
+        uint32 id
+    ) internal view returns (IPDrawer.Rarity) {
         (uint8 octet1, uint8 octet2, uint8 octet3, uint8 octet4) = idToOctets(
             id
         );
         bool isPalindrom = reverseDigits(octet4) == octet1 &&
             reverseDigits(octet3) == octet2;
         if (checkMembership(id, legendaryIds)) {
-            return Rarity.Legendary;
+            return IPDrawer.Rarity.Legendary;
         }
 
         if (
@@ -66,7 +63,7 @@ contract InternetProtocol is ERC721, ERC721Enumerable, Ownable {
             (octet2 + 1 == octet3) &&
             (octet3 + 1 == octet4)
         ) {
-            return Rarity.Legendary;
+            return IPDrawer.Rarity.Legendary;
         }
 
         if (
@@ -80,10 +77,10 @@ contract InternetProtocol is ERC721, ERC721Enumerable, Ownable {
             uint8 d3 = octet3 % 10;
             uint8 d4 = octet4 % 10;
             if (d1 == d2 && d2 == d3 && d3 == d4) {
-                return Rarity.Legendary;
+                return IPDrawer.Rarity.Legendary;
             } else {
-                if (isPalindrom) return Rarity.Epic;
-                return Rarity.Rare;
+                if (isPalindrom) return IPDrawer.Rarity.Epic;
+                return IPDrawer.Rarity.Rare;
             }
         }
 
@@ -93,14 +90,14 @@ contract InternetProtocol is ERC721, ERC721Enumerable, Ownable {
             (octet3 % 10 == 0) &&
             (octet4 % 10 == 0)
         ) {
-            return Rarity.Rare;
+            return IPDrawer.Rarity.Rare;
         }
 
         if (isPalindrom) {
-            return Rarity.Epic;
+            return IPDrawer.Rarity.Epic;
         }
 
-        return Rarity.Common;
+        return IPDrawer.Rarity.Common;
     }
 
     function reverseDigits(uint8 number) public pure returns (uint8) {
@@ -184,7 +181,7 @@ contract InternetProtocol is ERC721, ERC721Enumerable, Ownable {
 
     function constructTokenURI(
         uint32 id
-    ) internal pure returns (string memory) {
+    ) internal view returns (string memory) {
         return
             string(
                 abi.encodePacked(
@@ -193,7 +190,14 @@ contract InternetProtocol is ERC721, ERC721Enumerable, Ownable {
                         bytes(
                             abi.encodePacked(
                                 '{"image": "data:image/svg+xml;base64,',
-                                Base64.encode(bytes(IPDrawer.draw(idToIP(id)))),
+                                Base64.encode(
+                                    bytes(
+                                        IPDrawer.draw(
+                                            idToIP(id),
+                                            determineRarity(id)
+                                        )
+                                    )
+                                ),
                                 '"}'
                             )
                         )
