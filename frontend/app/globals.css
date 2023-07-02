@@ -15,8 +15,3 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
-
-body {
-  background: radial-gradient(63.61% 97.39% at 21.37% 35.40%, #FFF4E8 1.96%, #F4E3EB 22.87%, #D1EDF9 93.67%);
-}
