@@ -40,7 +40,13 @@ const IPAddressInput: React.FC<IPAddressInputProps> = ({
 
   const validateIPAddress = (ip: string): boolean => {
     const pattern = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
-    return pattern.test(ip);
+    if (!pattern.test(ip)) {
+      return false
+    }
+    if (!ip.split('.').map(Number).every((octet) => 0 <= octet && octet <= 255)) {
+      return false
+    }
+    return true
   };
 
   useEffect(() => {
@@ -56,8 +62,12 @@ const IPAddressInput: React.FC<IPAddressInputProps> = ({
 
   return (
     <Flex mt={50} flexDirection="column" color='black'>
-        <Text fontSize={32}>You can claim any free IP address!</Text>
-        <Text fontSize={24}>For example, claim your IP: <Text as="span" fontFamily="monospace" color="orange.300">{ipAddressInitial}</Text></Text>
+        <Box textAlign="center">
+          <Text fontSize={32}>You can claim any free IP address!</Text>
+          <Text fontSize={24}
+            >For example, claim your IP: <Text as="span" fontFamily="monospace" color="orange.300">{ipAddressInitial}</Text>
+          </Text>
+        </Box>
         <FormControl isInvalid={isInvalid} mt={10} display="flex" justifyContent="center">
             <Input
                 placeholder="Enter IP Address"
