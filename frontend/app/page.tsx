@@ -31,8 +31,7 @@ const Home: React.FC = () => {
           bgGradient="radial(63.61% 97.39% at 21.37% 35.40%, #FFF4E8 1.96%, #F4E3EB 22.87%, #D1EDF9 93.67%)"
       >
         <Header></Header>
-        <Box w={'100%'} position={'relative'} className="main">
-          <Box id="main" display="flex" flexDirection="column" alignItems="center" gap={30}>
+          <Flex flexDirection="column" alignItems="center" gap={30}>
             <Flex id="top" direction="row" px={[0, 100]} gap={[0, 150]}
                   justifyContent="space-between" alignItems="center">
               <Flex
@@ -53,8 +52,7 @@ const Home: React.FC = () => {
               >
                 {error && <Text color="crimson">{error}</Text>}
               </IPAddressInput>
-          </Box>
-        </Box>
+          </Flex>
       </Box>
   );
 };

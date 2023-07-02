@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:eslint": "./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:eslint:fix": "./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.4",
