@@ -1,8 +1,8 @@
 import './globals.css'
-import { Roboto } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { Providers } from './providers'
 
-const inter = Roboto({ weight: "400", subsets: ['latin'] })
+const inter = Inter({ weight: "400", subsets: ['latin'] })
 
 export const metadata = {
   title: 'Own an NFT IP address',
