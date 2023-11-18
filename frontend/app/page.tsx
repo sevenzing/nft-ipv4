@@ -5,7 +5,7 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, Image, InputGroup, Te
 import { Header } from './components/header';
 import IPAddressInput from './components/ip-address-input';
 import { IPAddressCard } from './components/ip-address-card';
-import { Address } from './components/address';
+import { useConnect } from 'wagmi';
 
 
 type Props = {
@@ -17,11 +17,13 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [alreadyMintedByAddress, setAlreadyMintedByAddress] = useState("0x123123132");
   const [error, setError] = useState('')
+  const { connect, connectors, error: web3Error, isLoading: web3isLoading, pendingConnector } = useConnect()
 
   useEffect(() => {
     if (ipAddress) {
-      setIsLoading(true)
-      setTimeout(() => {setIsLoading(false)}, 1000)
+      setIsLoading(true);
+      connect();
+      setTimeout(() => {setIsLoading(false)}, 1000);
     }
   }, [ipAddress])
 

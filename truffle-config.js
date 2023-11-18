@@ -44,7 +44,7 @@
 // require('dotenv').config();
 // const { MNEMONIC, PROJECT_ID } = process.env;
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   /**
@@ -65,10 +65,27 @@ module.exports = {
     // options below to some value.
     //
     development: {
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 7545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
+     host: "dev-vm",     // Localhost (default: none)
+     port: 8545,            // Standard Ethereum port (default: none)
+     network_id: "1337",       // Any network (default: none)
+     verify: {
+      apiUrl: 'http://dev-vm:4000/api',
+      apiKey: "empty",
+      explorerUrl: 'http://dev-vm:4000/address'
+     }
     },
+    goerli: {
+      provider: () => {
+        return new HDWalletProvider(process.env.PRIVATE_KEY, process.env.INFURA_URL)
+      },
+      networkCheckTimeout: 10000,
+      network_id: 5,
+      verify: {
+        apiUrl: 'https://eth-goerli.blockscout.com/api',
+        apiKey: "empty",
+        explorerUrl: 'https://eth-goerli.blockscout.com/address'
+      }
+    }
     //
     // An additional network, but with some advanced options…
     // advanced: {
@@ -138,4 +155,14 @@ module.exports = {
   //     }
   //   }
   // }
+  plugins: ['truffle-plugin-verify'],
+  api_keys: {
+    etherscan: '',
+  },
+  // verify: {
+  //   proxy: {
+  //     host: 'dev-vm',
+  //     port: '4000',
+  //   },
+  // },
 };
