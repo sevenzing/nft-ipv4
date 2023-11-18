@@ -12,6 +12,7 @@ export const Header: React.FC = () => {
       <Flex w="100%" padding="20px 10px" justifyContent="center" alignItems="center" gap="80px">
         <Link href="#">About</Link>
         <Link href="#">Docs</Link>
+        <Link href="#">Contract</Link>
       </Flex>
     );
   };

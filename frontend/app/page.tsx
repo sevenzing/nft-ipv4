@@ -1,54 +1,63 @@
 'use client'
 
-import { useState } from 'react';
-import { Box, Button, ChakraProvider, Container, Flex, Heading, Image, Input, InputGroup, Stack, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Box, Button, Flex, FormControl, FormErrorMessage, Image, InputGroup, Text } from '@chakra-ui/react';
 import { Header } from './components/header';
+import IPAddressInput from './components/ip-address-input';
+import { IPAddressCard } from './components/ip-address-card';
+import { useConnect } from 'wagmi';
+
+
+type Props = {
+  ip: string
+}
 
 const Home: React.FC = () => {
-  const [initialIpAddress, setinitialIpAddress] = useState('255.255.255.255')
-  const [ipAddress, setIpAddress] = useState(initialIpAddress);
+  const [ipAddress, setIPAddress] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [alreadyMintedByAddress, setAlreadyMintedByAddress] = useState("0x123123132");
+  const [error, setError] = useState('')
+  const { connect, connectors, error: web3Error, isLoading: web3isLoading, pendingConnector } = useConnect()
+
+  useEffect(() => {
+    if (ipAddress) {
+      setIsLoading(true);
+      connect();
+      setTimeout(() => {setIsLoading(false)}, 1000);
+    }
+  }, [ipAddress])
+
 
   return (
-    <ChakraProvider>
-    <Header></Header>
-    <Box w={'100%'} h={'100vh'} position={'relative'} className="main">
-      <Box id="main" display="flex" flexDirection="column" alignItems="center" gap={30}>
-        <Flex id="top" direction="row" px={100} gap={150}
-              justifyContent="space-between" alignItems="center">
-          <Flex
-            id="own you ip address"
-            w={500} h={200} py={20} direction="column"
-            justifyContent="center" alignItems="flex-start"
-            gap={0} flexShrink={0} fontSize={50}
-          >
-            <Text color='#363131'>Own your</Text>
-            <Text color='#FFAC2F' fontWeight={800}>NFT IP Address</Text>
-          </Flex>
-          <Image src="/mock_card.png"/>
-        </Flex>
-        <Flex flexDirection="column">
-          <Text fontSize={32}>You can claim any free IP address!</Text>
-          <Text fontSize={32}>Your current IP: <Text as="span" fontFamily="monospace" color="#FFAC2F">{initialIpAddress}</Text></Text>
-
-          <InputGroup gap={30}>
-            <Input
-                placeholder='desired IP address...' 
-                value={ipAddress}
-                textAlign="center"
-                />
-              <Button
-                loadingText='Loading'
-                colorScheme='blue'
-                spinnerPlacement='start'
+      <Box w="100%" h="100vh" 
+          bgGradient="radial(63.61% 97.39% at 21.37% 35.40%, #FFF4E8 1.96%, #F4E3EB 22.87%, #D1EDF9 93.67%)"
+      >
+        <Header></Header>
+          <Flex flexDirection="column" alignItems="center" gap={30}>
+            <Flex id="top" direction="row" px={[0, 100]} gap={[0, 150]}
+                  justifyContent="space-between" alignItems="center">
+              <Flex
+                id="own you ip address"
+                w={500} h={200} py={20} direction="column"
+                justifyContent="center" alignItems="flex-start"
+                gap={0} flexShrink={0} fontSize={[50]}
               >
-                Claim it!
-              </Button>
-          </InputGroup>
-        </Flex>
+                <Text>Own your</Text>
+                <Text bgClip='text' bgGradient='linear(to-l, purple.300, orange.300)' fontWeight={800}>NFT IPv4 Address</Text>
+              </Flex>
+              <IPAddressCard ip={ipAddress}/>
+            </Flex>
+              <IPAddressInput 
+                ipAddress={ipAddress} setIPAddress={setIPAddress} 
+                isLoading={isLoading} setIsLoading={setIsLoading} 
+                handleMintRequest={() => {}}
+              >
+                {error && <Text color="crimson">{error}</Text>}
+              </IPAddressInput>
+          </Flex>
       </Box>
-    </Box>
-    </ChakraProvider>
   );
 };
 
 export default Home;
+
